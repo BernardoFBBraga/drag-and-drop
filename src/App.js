@@ -9,12 +9,7 @@ function App() {
       <button onClick={() => dispatch({ type: DockActionTypes.addDock })}>+</button>
       <div className="docks">
         {state.dockOrder.map((dockId) => (
-          <Dock
-            key={dockId}
-            id={dockId}
-            state={state}
-            dispatch={dispatch}
-          />
+          <Dock key={dockId} id={dockId} state={state} dispatch={dispatch} />
         ))}
       </div>
     </div>
