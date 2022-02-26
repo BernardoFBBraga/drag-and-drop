@@ -16,7 +16,7 @@ const Dock: React.FC<IDock> = ({ id, state, dispatch }) => {
         +
       </button>
       {state.docks[id].cardOrder.map((cardId, index) => (
-        <Card info={state.cards[cardId]} key={cardId} index={index} dockId={id} dispatch={dispatch} />
+        <Card state={state} cardId={cardId} key={cardId} index={index} dockId={id} dispatch={dispatch} />
       ))}
     </div>
   );
