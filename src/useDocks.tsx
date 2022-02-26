@@ -44,7 +44,7 @@ export const dockReducer = (state: DockState, action: DockActions): DockState =>
       let { id: hoveredId, dockId: hoveredDock, index: hoveredIndex } = action;
       const { id: draggedId, dockId: draggedDock, index: draggedIndex } = state.drag as DockDragState;
       if (hoveredId === draggedId) return state;
-      const newState = { ...state };
+      const newState = { ...state, docks: { ...state.docks } };
 
       //order can be very important here since draggedDock and hoveredDock can be the same dock
       newState.docks[draggedDock] = { ...newState.docks[draggedDock] };
