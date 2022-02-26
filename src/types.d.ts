@@ -20,7 +20,7 @@ export type DockState = {
 
 export type DockDragState = {
   id: string;
-  dockId: number;
+  dockId: string;
   index: number;
 };
 

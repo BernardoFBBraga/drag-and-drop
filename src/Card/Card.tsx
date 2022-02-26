@@ -1,5 +1,5 @@
-import { DockActions, DockState } from "./types";
-import { DockActionTypes } from "./useDocks";
+import { DockActions, DockState } from "../types";
+import { DockActionTypes } from "../useDocks";
 
 interface ICard {
   dockId: string;
@@ -10,7 +10,7 @@ interface ICard {
 }
 
 const Card: React.FC<ICard> = ({ state, cardId, index, dockId, dispatch }) => {
-  const { id } = state.cards[cardId];
+  const { id, text } = state.cards[cardId];
   const dragging = state.drag?.id === cardId;
   return (
     <div
@@ -24,7 +24,7 @@ const Card: React.FC<ICard> = ({ state, cardId, index, dockId, dispatch }) => {
       onDragOver={(event) => event.preventDefault()}
       onDragEnd={() => dispatch({ type: DockActionTypes.dragCardEnd })}
     >
-      {id}
+      {text}
     </div>
   );
 };
