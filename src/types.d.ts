@@ -15,6 +15,13 @@ export type DockState = {
   dockOrder: number[];
   cards: Record<number, CardInfo>;
   nextId: number;
+  drag?: DockDragState;
+};
+
+export type DockDragState = {
+  id: number;
+  dockId: number;
+  index: number;
 };
 
 export type DockActions = DockActionAddCard | DockActionAddDock | DockActionDragCard;
@@ -27,7 +34,20 @@ export type DockActionAddDock = {
   type: DockActionTypes.addDock;
 };
 
-export type DockActionDragCard = {
-  type: DockActionTypes.dragCard;
-  cardId: number;
+export type DockActionDragCardStart = {
+  type: DockActionTypes.dragCardStart;
+  id: number;
+  dockId: number;
+  index: number;
+};
+
+export type DockActionDragCardHover = {
+  type: DockActionTypes.dragCardHover;
+  id: number;
+  dockId: number;
+  index: number;
+};
+
+export type DockActionDragCardEnd = {
+  type: DockActionTypes.dragCardEnd;
 };

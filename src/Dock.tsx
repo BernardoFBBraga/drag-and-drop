@@ -15,8 +15,8 @@ const Dock: React.FC<IDock> = ({ id, state, dispatch }) => {
       <button className="add-card" onClick={() => dispatch({ type: DockActionTypes.addCard, dockId: id })}>
         +
       </button>
-      {state.docks[id].cardOrder.map((cardId) => (
-        <Card info={state.cards[cardId]} key={cardId} />
+      {state.docks[id].cardOrder.map((cardId, index) => (
+        <Card info={state.cards[cardId]} key={cardId} index={index} dockId={id} dispatch={dispatch} />
       ))}
     </div>
   );
