@@ -4,7 +4,7 @@ import Card from "./Card";
 import { DockActionTypes } from "./useDocks";
 
 interface IDock {
-  id: number;
+  id: string;
   state: DockState;
   dispatch: React.Dispatch<DockActions>;
 }

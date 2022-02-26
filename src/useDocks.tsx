@@ -17,7 +17,7 @@ export const dockReducer = (state: DockState, action: DockActions): DockState =>
   switch (action.type) {
     case DockActionTypes.addDock: {
       const newState = { ...state };
-      const newId = newState.nextId++;
+      const newId = "dock-" + newState.nextId++;
       newState.docks = { ...newState.docks };
       newState.docks[newId] = { id: newId, cardOrder: [] };
       newState.dockOrder = [...newState.dockOrder, newId];
@@ -27,7 +27,7 @@ export const dockReducer = (state: DockState, action: DockActions): DockState =>
     case DockActionTypes.addCard: {
       const dockId = action.dockId;
       const newState = { ...state, docks: { ...state.docks }, cards: { ...state.cards } };
-      const newId = newState.nextId++;
+      const newId = "card-" + newState.nextId++;
       const newCard = { id: newId, text: "" + newId };
       newState.cards[newId] = newCard;
       newState.docks[dockId] = { ...newState.docks[dockId] };

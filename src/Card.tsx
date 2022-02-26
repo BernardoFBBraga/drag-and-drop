@@ -2,10 +2,10 @@ import { DockActions, DockState } from "./types";
 import { DockActionTypes } from "./useDocks";
 
 interface ICard {
-  dockId: number;
+  dockId: string;
   index: number;
   state: DockState;
-  cardId: number;
+  cardId: string;
   dispatch: React.Dispatch<DockActions>;
 }
 
