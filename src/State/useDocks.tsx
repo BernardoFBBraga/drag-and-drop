@@ -1,5 +1,5 @@
 import { useReducer } from "react";
-import { DockActions, DockDragState, DockState } from "./types";
+import { DockActionAddPlaceholderCard, DockActions, DockDragState, DockState } from "../types";
 
 // se o card encosta em outro e está acima, o que foi encostado sobe.
 // se o card encosta o outro e está abaixo, o que foi encostado desce.
@@ -25,25 +25,40 @@ export const dockReducer = (state: DockState, action: DockActions): DockState =>
     }
 
     case DockActionTypes.addCard: {
-      const dockId = action.dockId;
+      const { dockId, cardId, text, index } = action;
       const newState = { ...state, docks: { ...state.docks }, cards: { ...state.cards } };
-      const newId = "card-" + newState.nextId++;
-      const newCard = { id: newId, text: "" + newId };
+      const newId = cardId ? cardId : "card-" + newState.nextId++;
+      const newCard = { id: newId, text: text ? text : "" + newId };
       newState.cards[newId] = newCard;
       newState.docks[dockId] = { ...newState.docks[dockId] };
-      newState.docks[dockId].cardOrder = [...newState.docks[dockId].cardOrder, newId];
+
+      newState.docks[dockId].cardOrder = [
+        ...newState.docks[dockId].cardOrder.slice(0, index),
+        newId,
+        ...(index ? newState.docks[dockId].cardOrder.slice(index) : []),
+      ];
+
       return newState;
     }
 
     case DockActionTypes.dragCardStart: {
       const { id, dockId, index } = action;
-      return { ...state, drag: { id, dockId, index } };
+      const placeHolderId = "drag-placeholder-card";
+      const addPlaceholderCardAction: DockActionAddPlaceholderCard = {
+        type: DockActionTypes.addCard,
+        cardId: placeHolderId,
+        text: id,
+        dockId,
+        index: index + 1,
+      };
+      const newState = dockReducer(state, addPlaceholderCardAction);
+      return { ...newState, drag: { id: placeHolderId, dockId, index: index + 1, origin: { id, dockId } } };
     }
 
     case DockActionTypes.dragCardHover: {
       let { id: hoveredId, dockId: hoveredDock, index: hoveredIndex } = action;
-      const { id: draggedId, dockId: draggedDock, index: draggedIndex } = state.drag as DockDragState;
-      if (hoveredId === draggedId) return state;
+      const { id: placeholderId, dockId: draggedDock, index: draggedIndex } = state.drag as DockDragState;
+      if (hoveredId === placeholderId) return state;
       const newState = { ...state, docks: { ...state.docks } };
 
       //order can be very important here since draggedDock and hoveredDock can be the same dock
@@ -66,15 +81,29 @@ export const dockReducer = (state: DockState, action: DockActions): DockState =>
       const targetIndex = movingDown ? hoveredIndex + 1 : hoveredIndex;
       nextDock.cardOrder = [
         ...nextDock.cardOrder.slice(0, targetIndex),
-        draggedId,
+        placeholderId,
         ...nextDock.cardOrder.slice(targetIndex),
       ];
-      newState.drag = { id: draggedId, dockId: hoveredDock, index: targetIndex };
+      newState.drag = { ...(state.drag as DockDragState), id: placeholderId, dockId: hoveredDock, index: targetIndex };
       return newState;
     }
 
     case DockActionTypes.dragCardEnd: {
-      const newState = { ...state };
+      const newState = { ...state, cards: { ...state.cards }, docks: { ...state.docks } };
+      const dragState = newState.drag as DockDragState;
+      const dockDrop = newState.docks[dragState.dockId];
+      dockDrop.cardOrder = [...dockDrop.cardOrder];
+      // remove the plaholder card and add the origin card in its position
+      dockDrop.cardOrder.splice(dragState.index, 1, dragState.origin.id);
+      // now we'll remove the origin card
+      const dockOrigin = newState.docks[dragState.origin.dockId];
+      dockOrigin.cardOrder = [...dockOrigin.cardOrder];
+      const originIndex = dockOrigin.cardOrder.findIndex(
+        (id, index) =>
+          id === dragState.origin.id && (dragState.origin.dockId !== dragState.dockId || index !== dragState.index)
+      );
+      dockOrigin.cardOrder.splice(originIndex, 1);
+      delete newState.cards[dragState.id];
       delete newState.drag;
       return newState;
     }

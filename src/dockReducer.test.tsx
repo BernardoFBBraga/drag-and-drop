@@ -1,4 +1,4 @@
-import { DockActionTypes, dockReducer, initialState } from "./useDocks";
+import { DockActionTypes, dockReducer, initialState } from "./State/useDocks";
 
 describe("adding / removing itens", () => {
   it("should add docks", () => {
@@ -33,9 +33,15 @@ describe("moving cards", () => {
     const secondCardId = state.docks[dockId].cardOrder[1];
 
     state = dockReducer(state, { type: DockActionTypes.dragCardStart, id: firstCardId, dockId: dockId, index: 0 });
-    state = dockReducer(state, { type: DockActionTypes.dragCardHover, id: secondCardId, dockId: dockId, index: 1 });
+    state = dockReducer(state, {
+      type: DockActionTypes.dragCardHover,
+      id: secondCardId,
+      dockId: dockId,
+      index: state.docks[dockId].cardOrder.findIndex((id) => id === secondCardId),
+    });
     state = dockReducer(state, { type: DockActionTypes.dragCardEnd });
 
+    expect(state.docks[dockId].cardOrder.length).toBe(2);
     expect(state.docks[dockId].cardOrder[0]).toBe(secondCardId);
     expect(state.docks[dockId].cardOrder[1]).toBe(firstCardId);
   });

@@ -1,5 +1,5 @@
 import "./App.css";
-import useDocks, { DockActionTypes } from "./useDocks";
+import useDocks, { DockActionTypes } from "./State/useDocks";
 import Dock from "./Dock";
 
 function App() {

@@ -34,8 +34,12 @@
   background-color: aliceblue;
 }
 
-.card-dragging {
+.card-drag-placeholder {
   opacity: 0.35;
+}
+
+.card-drag-origin {
+  display: none;
 }
 
 .App-link {

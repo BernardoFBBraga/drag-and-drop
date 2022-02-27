@@ -1,7 +1,7 @@
 import React from "react";
 import { DockActions, DockState } from "./types";
 import Card from "./Card";
-import { DockActionTypes } from "./useDocks";
+import { DockActionTypes } from "./State/useDocks";
 
 interface IDock {
   id: string;
