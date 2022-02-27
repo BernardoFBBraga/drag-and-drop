@@ -11,6 +11,7 @@ export enum DockActionTypes {
   dragCardStart = "dragCardStart",
   dragCardEnd = "dragCardEnd",
   dragCardHover = "dragCardHover",
+  dragCardCancel = "dragCardCancel",
 }
 
 export const dockReducer = (state: DockState, action: DockActions): DockState => {
@@ -103,6 +104,17 @@ export const dockReducer = (state: DockState, action: DockActions): DockState =>
           id === dragState.origin.id && (dragState.origin.dockId !== dragState.dockId || index !== dragState.index)
       );
       dockOrigin.cardOrder.splice(originIndex, 1);
+      delete newState.cards[dragState.id];
+      delete newState.drag;
+      return newState;
+    }
+
+    case DockActionTypes.dragCardCancel: {
+      const newState = { ...state, cards: { ...state.cards }, docks: { ...state.docks } };
+      const dragState = newState.drag as DockDragState;
+      const dockDrop = newState.docks[dragState.dockId];
+      dockDrop.cardOrder = [...dockDrop.cardOrder];
+      dockDrop.cardOrder.splice(dragState.index, 1);
       delete newState.cards[dragState.id];
       delete newState.drag;
       return newState;

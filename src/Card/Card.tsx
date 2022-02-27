@@ -37,7 +37,10 @@ const Card: React.FC<ICard> = ({ state, cardId, index, dockId, dispatch }) => {
         event.preventDefault();
       }}
       onDragOver={(event) => event.preventDefault()}
-      onDragEnd={() => dispatch({ type: DockActionTypes.dragCardEnd })}
+      onDragEnd={(e) => {
+        if (e.dataTransfer.dropEffect === "none") dispatch({ type: DockActionTypes.dragCardCancel });
+        else dispatch({ type: DockActionTypes.dragCardEnd });
+      }}
     >
       <CardStyle cardType={cardType}>{text}</CardStyle>
     </div>
