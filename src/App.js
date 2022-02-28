@@ -5,7 +5,12 @@ import Dock from "./Dock";
 function App() {
   const [state, dispatch] = useDocks();
   return (
-    <div className="App">
+    <div
+      className="App"
+      onDragEnter={(event) => event.preventDefault()}
+      onDragOver={(event) => event.preventDefault()}
+      onDrop={() => dispatch({ type: DockActionTypes.dragCardEnd })}
+    >
       <button onClick={() => dispatch({ type: DockActionTypes.addDock })}>+</button>
       <div className="docks">
         {state.dockOrder.map((dockId) => (
